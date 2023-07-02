@@ -1,0 +1,61 @@
+
+
+
+$gmx(document).ready(function () {
+    console.log("Cargó");
+    console.log(app);
+    console.log("app");
+});
+
+
+
+app.controller('multiLenguaCtrol', ['$scope', '$http', '$window', '$rootScope',
+    function ($scope, $http, $window, $rootScope) {
+
+        $http.defaults.headers.get = { "Content-Type": "application/x-www-form-urlencoded;charset=utf-8" };
+
+        /**
+         * BLOQUE CONTROLADOR DE MULTILENGUA PORTAL SIGED
+         * INICIA++++++++++++++++++++++++++++++++++++++++
+         */
+        console.log("getLengua : " + sessionStorage.getItem("lengua"));
+        if (sessionStorage.getItem("lengua") !== null) {
+            $scope.lenguaje = sessionStorage.getItem("lengua");
+        } else {
+            $scope.lenguaje = "es";
+            sessionStorage.setItem("lengua", $scope.lenguaje);
+            console.log("Se asignó es");
+        }
+        $scope.setLenguaje = function (pLengua) {
+            //Verificar info estadistica global
+            console.log("setLenguaje...");
+            console.log("Lenguaje: " + $scope.lenguaje);
+            console.log("pLengua: " + pLengua);
+            $scope.lenguaje = pLengua;
+            sessionStorage.setItem("lengua", $scope.lenguaje);
+            $scope.loadLenguaje();
+        }
+        $scope.loadLenguaje = function () {
+            //Verificar info estadistica global
+            console.log("Cargando lenguaje...");
+            console.log("Lenguaje: " + $scope.lenguaje);
+            $scope.getLenguaje($scope.lenguaje);
+        }
+        $scope.getLenguaje = function () {
+            //Verificar info estadistica global
+            console.log("Buscando valor de lenguaje." + $scope.lenguaje);
+            console.log("Buscando lenguanje del navegador." + $window.navigator.language);
+            $http
+                    .get(
+                            'js/i18n/languages/'+ $scope.lenguaje +'.json')
+                    .then(
+                            function (data) {
+                                $scope.lengua = data.data;
+                                console.log($scope.lengua);
+                            });
+        }
+        /**
+         * BLOQUE CONTROLADOR DE MULTILENGUA PORTAL SIGED
+         * TERMINA***************************************
+         */
+    }]);
